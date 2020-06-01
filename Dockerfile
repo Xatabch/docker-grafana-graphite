@@ -7,32 +7,33 @@ FROM   alpine
 # Install all prerequisites
 RUN     apk add --update --no-cache nginx nodejs nodejs-npm git curl wget gcc ca-certificates \
                                     python3-dev py-pip musl-dev libffi-dev cairo supervisor bash \
-                                    py-pyldap python3                                                                 &&\
+                                    py-pyldap python3                                                                &&\
         apk --no-cache add ca-certificates wget                                                                      &&\
         wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub                  &&\
         wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk                &&\
         apk add glibc-2.28-r0.apk                                                                                    &&\
         rm glibc-2.28-r0.apk                                                                                         &&\
         adduser -D -u 1000 -g 'www' www                                                                              &&\
-        pip3 install -U pip pytz gunicorn six                                                                         &&\
+        pip3 install -U pip pytz gunicorn six                                                                        &&\
+        pip3 install wheel                                                                                           &&\
         npm cache clean --force
 
 # Checkout the master branches of Graphite, Carbon and Whisper and install from there
 RUN     mkdir /src                                                                                                   &&\
         git clone --depth=1 --branch master https://github.com/graphite-project/whisper.git /src/whisper             &&\
         cd /src/whisper                                                                                              &&\
-        pip3 install .                                                                                                &&\
+        pip3 install .                                                                                               &&\
         python3 setup.py install
 
 RUN     git clone --depth=1 --branch master https://github.com/graphite-project/carbon.git /src/carbon               &&\
         cd /src/carbon                                                                                               &&\
-        pip3 install .                                                                                                &&\
+        pip3 install .                                                                                               &&\
         python3 setup.py install
 
 RUN     git clone --depth=1 --branch master https://github.com/graphite-project/graphite-web.git /src/graphite-web   &&\
         cd /src/graphite-web                                                                                         &&\
         pip3 install .                                                                                                &&\
-        python setup.py install                                                                                      &&\
+        python3 setup.py install                                                                                      &&\
         pip3 install -r requirements.txt
 
 # Install StatsD
