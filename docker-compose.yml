@@ -4,6 +4,7 @@ services:
         container_name: graphite
         image: graphiteapp/graphite-statsd
         ports: 
+            - '80:80'
             - '8125:8125/udp'
     grafana:
         container_name: grafana
@@ -14,4 +15,11 @@ services:
             - ./grafana/provisioning:/etc/grafana/provisioning
             - ./grafana/config.ini:/etc/grafana/config.ini
         depends_on: 
+            - graphite
+    server:
+        container_name: statsd-server
+        build: .
+        ports:
+            - '8000:8000'
+        depends_on:
             - graphite
