@@ -4,11 +4,7 @@ services:
         container_name: graphite
         image: graphiteapp/graphite-statsd
         ports: 
-            - '8000:80'
-            - '81:81'
             - '8125:8125/udp'
-            - '8126:8126'
-            - '2003:2003'
     grafana:
         container_name: grafana
         image: grafana/grafana
