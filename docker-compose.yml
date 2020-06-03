@@ -1,17 +1,21 @@
-version: '2'
-services:
-  grafana_graphite:
-    build: .
-    container_name: grafana-dashboard
-    ports:
-      - '80:80'
-      - '81:81'
-      - '8125:8125/udp'
-      - '8126:8126'
-      - '2003:2003'
-      - '8000:8000'
-    volumes:
-      - ./data/whisper:/opt/graphite/storage/whisper
-      - ./data/grafana:/opt/grafana/data
-      - ./log/graphite:/opt/graphite/storage/log
-      - ./log/supervisor:/var/log/supervisor
+version: '3'
+services: 
+    graphite:
+        container_name: graphite
+        image: graphiteapp/graphite-statsd
+        ports: 
+            - '8000:80'
+            - '81:81'
+            - '8125:8125/udp'
+            - '8126:8126'
+            - '2003:2003'
+    grafana:
+        container_name: grafana
+        image: grafana/grafana
+        ports: 
+            - '3000:3000'
+        volumes:
+            - ./grafana/provisioning:/etc/grafana/provisioning
+            - ./grafana/config.ini:/etc/grafana/config.ini
+        depends_on: 
+            - graphite
