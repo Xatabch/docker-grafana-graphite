@@ -17,16 +17,6 @@ app.post('/gauge', (req, res) => {
     res.status(200).send();
 });
 
-app.post('/increment', (req, res) => {
-    sdc.increment(name, value);
-    res.status(200).send();
-});
-
-app.post('/decrement', (req, res) => {
-    sdc.decrement(name, value);
-    res.status(200).send();
-});
-
 app.post('/histogram', (req, res) => {
     const name = req.body.name;
     const value = req.body.value;
@@ -41,6 +31,13 @@ app.post('/set', (req, res) => {
     const value = req.body.value;
 
     sdc.set(name, value);
+    res.status(200).send();
+});
+
+app.post('/raw', (req, res) => {
+    const value = req.body.value;
+
+    sdc.raw(value);
     res.status(200).send();
 });
 
