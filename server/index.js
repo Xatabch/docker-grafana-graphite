@@ -9,7 +9,34 @@ const port = 8001;
 
 app.use(bodyParser.json())
 
-app.post('/statsd', (req, res) => {
+app.post('/gauge', (req, res) => {
+    const name = req.body.name;
+    const value = req.body.value;
+
+    sdc.gauge(name, value);
+    res.status(200).send();
+});
+
+app.post('/increment', (req, res) => {
+    sdc.increment(name, value);
+    res.status(200).send();
+});
+
+app.post('/decrement', (req, res) => {
+    sdc.decrement(name, value);
+    res.status(200).send();
+});
+
+app.post('/histogram', (req, res) => {
+    const name = req.body.name;
+    const value = req.body.value;
+    const tag = req.body.tag;
+
+    sdc.histogram(name, value, tag);
+    res.status(200).send();
+});
+
+app.post('/set', (req, res) => {
     const name = req.body.name;
     const value = req.body.value;
 
