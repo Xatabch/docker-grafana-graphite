@@ -3,8 +3,6 @@ services:
     graphite:
         container_name: graphite
         image: graphiteapp/graphite-statsd
-        ports: 
-            - '8125:8125/udp'
     grafana:
         container_name: grafana
         image: grafana/grafana
@@ -15,3 +13,17 @@ services:
             - ./grafana/config.ini:/etc/grafana/config.ini
         depends_on: 
             - graphite
+    statsd:
+        container_name: statsd
+        build: .
+        depends_on:
+            - graphite
+    nginx:
+        container_name: nginx
+        image: nginx:latest
+        ports:
+            - '80:80'
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+        depends_on:
+            - grafana
